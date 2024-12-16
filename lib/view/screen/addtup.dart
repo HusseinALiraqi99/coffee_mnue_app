@@ -1,7 +1,7 @@
 import 'package:coffee_mnue_app/controller/tab_controller.dart';
+import 'package:coffee_mnue_app/view/screen/hompage_sceen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:coffee_mnue_app/view/screen/hompage_sceen.dart'; // استيراد الصفحة الرئيسية
 
 class AddTabs extends StatelessWidget {
   final TextEditingController categoryController = TextEditingController();
@@ -40,7 +40,7 @@ class AddTabs extends StatelessWidget {
               child: Text('إضافة قسم'),
             ),
             Divider(),
-            // اختيار القسم وإدخال المنتج
+            // اختيار القسم من القائمة المنسدلة
             Obx(() {
               return DropdownButton<String>(
                 isExpanded: true,
@@ -70,7 +70,8 @@ class AddTabs extends StatelessWidget {
                 if (selectedCategory != null && productController.text.isNotEmpty) {
                   tabController.addProduct(selectedCategory!, productController.text);
                   productController.clear();
-                  Get.to(() => HomePage());  // الانتقال إلى الصفحة الرئيسية بعد إضافة المنتج
+                  // بعد إضافة المنتج، الانتقال إلى صفحة HomePage
+                  Get.to(() => HomePage());
                 }
               },
               child: Text('إضافة منتج'),

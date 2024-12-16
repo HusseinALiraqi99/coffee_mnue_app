@@ -29,8 +29,34 @@ class HomePage extends StatelessWidget {
                     return ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context, index) {
+                        String product = products[index];
                         return ListTile(
-                          title: Text(products[index]),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(product),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.remove),
+                                    onPressed: () {
+                                      tabController.decrementProductCount(product);
+                                    },
+                                  ),
+                                  // استخدام Obx لربط العداد بالواجهة
+                                  Obx(() {
+                                    return Text('${tabController.productCounts[product] ?? 0}');
+                                  }),
+                                  IconButton(
+                                    icon: Icon(Icons.add),
+                                    onPressed: () {
+                                      tabController.incrementProductCount(product);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       },
                     );
