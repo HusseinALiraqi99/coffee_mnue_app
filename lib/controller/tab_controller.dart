@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class MyTabController extends GetxController {
   // قائمة الأقسام
@@ -8,8 +7,8 @@ class MyTabController extends GetxController {
   // خريطة لربط كل قسم بالمنتجات
   var categoryProducts = <String, List<String>>{}.obs;
 
-  // خريطة لربط كل منتج بعداده
-  var productCounts = <String, int>{}.obs;
+  // خريطة لربط كل منتج بسعره
+  var productPrices = <String, double>{}.obs;
 
   // إضافة قسم جديد
   void addCategory(String category) {
@@ -19,25 +18,14 @@ class MyTabController extends GetxController {
     }
   }
 
-  // إضافة منتج إلى قسم معين
-  void addProduct(String category, String product) {
+  // إضافة منتج مع السعر إلى قسم معين
+  void addProductWithPrice(String category, String product, double price) {
     if (product.isNotEmpty && categoryProducts.containsKey(category)) {
       categoryProducts[category]!.add(product);
-      productCounts[product] = 0;  // إضافة عداد لكل منتج جديد
+      productPrices[product] = price;  // تخزين السعر الخاص بالمنتج
     }
   }
 
-  // زيادة العداد للمنتج
-  void incrementProductCount(String product) {
-    if (productCounts.containsKey(product)) {
-      productCounts[product] = productCounts[product]! + 1;
-    }
-  }
 
-  // تقليل العداد للمنتج
-  void decrementProductCount(String product) {
-    if (productCounts.containsKey(product) && productCounts[product]! > 0) {
-      productCounts[product] = productCounts[product]! - 1;
-    }
-  }
+
 }

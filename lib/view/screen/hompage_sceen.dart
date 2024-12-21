@@ -1,4 +1,5 @@
 import 'package:coffee_mnue_app/controller/tab_controller.dart';
+import 'package:coffee_mnue_app/view/screen/ListPage_screen.dart';
 import 'package:coffee_mnue_app/view/screen/addtup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,37 +26,45 @@ class HomePage extends StatelessWidget {
           body: tabController.categories.isNotEmpty
               ? TabBarView(
                   children: tabController.categories.map((category) {
-                    final products = tabController.categoryProducts[category] ?? [];
+                    final products =
+                        tabController.categoryProducts[category] ?? [];
                     return ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context, index) {
                         String product = products[index];
+                        double productPrice =
+                            tabController.productPrices[product] ?? 0.0;
                         return ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(product),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.remove),
-                                    onPressed: () {
-                                      tabController.decrementProductCount(product);
-                                    },
+                          title: Container(
+                            color: Colors.amber,
+                            width: 200, // تحديد عرض الـ Container
+                            height: 100, // تحديد ارتفاع الـ Container
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start, // محاذاة العناصر بدايةً
+                              crossAxisAlignment: CrossAxisAlignment.center, // محاذاة العناصر عموديًا في الوسط
+                              children: [
+                                Text(product), // عرض اسم المنتج
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 50), // إضافة مسافة بين المنتج والسعر
+                                  child: Text(
+                                    "السعر: $productPrice", // عرض السعر المرتبط بالمنتج
+                                    style: TextStyle(fontSize: 16),
                                   ),
-                                  // استخدام Obx لربط العداد بالواجهة
-                                  Obx(() {
-                                    return Text('${tabController.productCounts[product] ?? 0}');
-                                  }),
-                                  IconButton(
-                                    icon: Icon(Icons.add),
-                                    onPressed: () {
-                                      tabController.incrementProductCount(product);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Spacer(),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // عند الضغط على الزر، نضيف المنتج مع السعر
+                                    Get.snackbar(
+                                      "تم إضافة المنتج",
+                                      "تم إضافة المنتج $product بسعر $productPrice",
+                                      snackPosition: SnackPosition.BOTTOM,
+                                    );
+                                  },
+                                  child: Text('إضافة'),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -67,10 +76,25 @@ class HomePage extends StatelessWidget {
                 ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
+              // الانتقال إلى صفحة إضافة المنتجات
               Get.to(() => AddTabs());
             },
             child: Icon(Icons.add),
           ),
+          bottomNavigationBar: tabController.categoryProducts.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // الانتقال إلى صفحة القائمة بعد إضافة عدد معين من المنتجات
+                      if (tabController.categoryProducts.isNotEmpty) {
+                        Get.to(() => ListPage());
+                      }
+                    },
+                    child: Text('القائمة'),
+                  ),
+                )
+              : null,
         ),
       );
     });
