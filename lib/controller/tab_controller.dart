@@ -34,21 +34,32 @@ class MyTabController extends GetxController {
     }
   }
 
-  // زيادة السعر المعدل
+ // زيادة السعر المعدل بشكل 1000، 2000، 3000، 4000
   void increaseModifiedPrice(String product) {
     if (productModifiedPrices.containsKey(product)) {
-      double currentPrice = productModifiedPrices[product]!.value;
-      productModifiedPrices[product]!.value = currentPrice * 2;  // زيادة السعر المعدل
-      productAddCounts[product]!.value++;  // زيادة عدد الإضافات
+      int addCount = productAddCounts[product]!.value;
+      double currentPrice = productPrices[product] ?? 0.0;
+      productModifiedPrices[product]!.value = currentPrice *
+          (addCount + 1); // زيادة السعر المعدل بناءً على عدد الإضافات
+      productAddCounts[product]!.value++; // زيادة عدد الإضافات
     }
   }
 
-  // تقليل السعر المعدل
+
+  // تقليل السعر المعدل بشكل 1000، 2000، 3000، 4000
   void decreaseModifiedPrice(String product) {
     if (productModifiedPrices.containsKey(product)) {
-      double currentPrice = productModifiedPrices[product]!.value;
-      productModifiedPrices[product]!.value = (currentPrice / 2).clamp(0.0, double.infinity);  // تقليل السعر المعدل
-      productAddCounts[product]!.value = (productAddCounts[product]!.value - 1).clamp(0, 999);  // تقليل عدد الإضافات
+      int addCount = productAddCounts[product]!.value;
+      double currentPrice = productPrices[product] ?? 0.0;
+
+      // التأكد من أن السعر المعدل لا يصبح أقل من السعر الأصلي
+      double newPrice = currentPrice * (addCount - 1);
+      if (newPrice >= currentPrice) {
+        productModifiedPrices[product]!.value =
+            newPrice; // تقليل السعر المعدل بناءً على عدد الإضافات
+        productAddCounts[product]!.value--; // تقليل عدد الإضافات
+      }
     }
   }
+
 }
