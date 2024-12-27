@@ -1,8 +1,8 @@
-import 'package:coffee_mnue_app/controller/tab_controller.dart';
-import 'package:coffee_mnue_app/view/screen/ListPage_screen.dart';
 import 'package:coffee_mnue_app/view/screen/addtup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:coffee_mnue_app/controller/tab_controller.dart';
+import 'package:coffee_mnue_app/view/screen/ListPage_screen.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -34,32 +34,61 @@ class HomePage extends StatelessWidget {
                         String product = products[index];
                         double productPrice =
                             tabController.productPrices[product] ?? 0.0;
+                        RxDouble modifiedPrice =
+                            tabController.productModifiedPrices[product]!;
+                        RxInt addCount = tabController.productAddCounts[product]!;
+
                         return ListTile(
                           title: Container(
                             color: Colors.amber,
-                            width: 200, // تحديد عرض الـ Container
-                            height: 100, // تحديد ارتفاع الـ Container
+                            width: 200,
+                            height: 100,
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start, // محاذاة العناصر بدايةً
-                              crossAxisAlignment: CrossAxisAlignment.center, // محاذاة العناصر عموديًا في الوسط
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(product), // عرض اسم المنتج
+                                Text(product),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 50), // إضافة مسافة بين المنتج والسعر
-                                  child: Text(
-                                    "السعر: $productPrice", // عرض السعر المرتبط بالمنتج
-                                    style: TextStyle(fontSize: 16),
+                                  padding: const EdgeInsets.only(left: 50),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "السعر الثابت: $productPrice",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(Icons.remove),
+                                            onPressed: () {
+                                              tabController.decreaseModifiedPrice(product);
+                                            },
+                                          ),
+                                          Obx(() => Text(
+                                                "السعر المعدل: ${modifiedPrice.value} | عدد الإضافات: ${addCount.value}",
+                                                style: TextStyle(fontSize: 16),
+                                              )),
+                                          IconButton(
+                                            icon: Icon(Icons.add),
+                                            onPressed: () {
+                                              tabController.increaseModifiedPrice(product);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Spacer(),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // عند الضغط على الزر، نضيف المنتج مع السعر
                                     Get.snackbar(
                                       "تم إضافة المنتج",
-                                      "تم إضافة المنتج $product بسعر $productPrice",
+                                      "تم إضافة المنتج $product بسعر $productPrice مع السعر المعدل ${modifiedPrice.value} وعدد الإضافات ${addCount.value}",
                                       snackPosition: SnackPosition.BOTTOM,
                                     );
+
+                                    tabController.addProductWithPrice(category, product, modifiedPrice.value);
                                   },
                                   child: Text('إضافة'),
                                 ),
@@ -76,7 +105,6 @@ class HomePage extends StatelessWidget {
                 ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              // الانتقال إلى صفحة إضافة المنتجات
               Get.to(() => AddTabs());
             },
             child: Icon(Icons.add),
