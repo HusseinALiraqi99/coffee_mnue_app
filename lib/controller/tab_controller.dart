@@ -61,5 +61,21 @@ class MyTabController extends GetxController {
       }
     }
   }
+  var tableNumbers = <String>[].obs; // قائمة أرقام الطاولات
 
+  void addTableNumber(String tableNumber) {
+    if (!tableNumbers.contains(tableNumber)) {
+      tableNumbers.add(tableNumber);
+    }
+  }
+  List<Map<String, dynamic>> getProductDetails() {
+    return productPrices.keys.map((product) {
+      return {
+        'name': product,
+        'price': productPrices[product] ?? 0.0,
+        'modifiedPrice': productModifiedPrices[product]?.value ?? 0.0,
+        'addCount': productAddCounts[product]?.value ?? 0,
+      };
+    }).toList();
+  }
 }
