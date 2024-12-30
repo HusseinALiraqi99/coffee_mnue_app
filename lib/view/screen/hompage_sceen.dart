@@ -79,19 +79,7 @@ class HomePage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Spacer(),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Get.snackbar(
-                                      "تم إضافة المنتج",
-                                      "تم إضافة المنتج $product بسعر $productPrice مع السعر المعدل ${modifiedPrice.value} وعدد الإضافات ${addCount.value}",
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-
-                                    tabController.addProductWithPrice(category, product, modifiedPrice.value);
-                                  },
-                                  child: Text('إضافة'),
-                                ),
+                                
                               ],
                             ),
                           ),
