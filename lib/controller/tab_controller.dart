@@ -29,12 +29,13 @@ class MyTabController extends GetxController {
     if (product.isNotEmpty && categoryProducts.containsKey(category)) {
       categoryProducts[category]!.add(product);
       productPrices[product] = price;
-      productModifiedPrices[product] = (price * 1.0).obs;  // السعر المعدل يبدأ بنفس السعر المدخل
-      productAddCounts[product] = 1.obs;  // عدد الإضافات يبدأ من 1
+      productModifiedPrices[product] =
+          (price * 1.0).obs; // السعر المعدل يبدأ بنفس السعر المدخل
+      productAddCounts[product] = 1.obs; // عدد الإضافات يبدأ من 1
     }
   }
 
- // زيادة السعر المعدل بشكل 1000، 2000، 3000، 4000
+  // زيادة السعر المعدل بشكل 1000، 2000، 3000، 4000
   void increaseModifiedPrice(String product) {
     if (productModifiedPrices.containsKey(product)) {
       int addCount = productAddCounts[product]!.value;
@@ -44,7 +45,6 @@ class MyTabController extends GetxController {
       productAddCounts[product]!.value++; // زيادة عدد الإضافات
     }
   }
-
 
   // تقليل السعر المعدل بشكل 1000، 2000، 3000، 4000
   void decreaseModifiedPrice(String product) {
@@ -62,4 +62,54 @@ class MyTabController extends GetxController {
     }
   }
 
+  var tableNumbers = <String>[].obs; // قائمة أرقام الطاولات
+
+  void addTableNumber(String tableNumber) {
+    if (!tableNumbers.contains(tableNumber)) {
+      tableNumbers.add(tableNumber);
+    }
+  }
+
+  List<Map<String, dynamic>> getProductDetails() {
+    return productPrices.keys.map((product) {
+      return {
+        'name': product,
+        'price': productPrices[product] ?? 0.0,
+        'modifiedPrice': productModifiedPrices[product]?.value ?? 0.0,
+        'addCount': productAddCounts[product]?.value ?? 0,
+      };
+    }).toList();
+  }
+
+  // إعادة تعيين العداد إلى حالته الأولية
+  void resetProductCounters() {
+    // إعادة تعيين قيم السعر المعدل وعدد الإضافات
+    productModifiedPrices.forEach((key, value) {
+      value.value =
+          productPrices[key] ?? 0.0; // إعادة السعر المعدل إلى السعر الأصلي
+    });
+    productAddCounts.forEach((key, value) {
+      value.value = 1; // إعادة عدد الإضافات إلى 1
+    });
+  }
+
+  // خريطة لربط كل طاولة بالمنتجات الخاصة بها
+  var tableProductDetails = <String, List<Map<String, dynamic>>>{}.obs;
+
+  // إضافة قائمة المنتجات للطاولة
+  void saveProductsToTable(String tableNumber) {
+    if (tableNumber.isNotEmpty) {
+      // تأكد من أن الطاولة تحتوي على قائمة فارغة عند إضافتها لأول مرة
+      if (!tableProductDetails.containsKey(tableNumber)) {
+        tableProductDetails[tableNumber] = [];
+      }
+      tableProductDetails[tableNumber] =
+          getProductDetails(); // حفظ المنتجات للطاولة
+    }
+  }
+
+  // استرجاع المنتجات الخاصة بالطاولة
+  List<Map<String, dynamic>> getProductsForTable(String tableNumber) {
+    return tableProductDetails[tableNumber] ?? [];
+  }
 }

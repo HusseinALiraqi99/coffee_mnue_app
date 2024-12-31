@@ -86,7 +86,8 @@ class AddTabs extends StatelessWidget {
                       if (inputpricecontroller.text.isNotEmpty) {
                         double price = double.parse(inputpricecontroller.text);
                         // إضافة المنتج مع السعر
-                        if (selectedCategory != null && productController.text.isNotEmpty) {
+                        if (selectedCategory != null &&
+                            productController.text.isNotEmpty) {
                           tabController.addProductWithPrice(
                             selectedCategory!,
                             productController.text,

@@ -36,7 +36,8 @@ class HomePage extends StatelessWidget {
                             tabController.productPrices[product] ?? 0.0;
                         RxDouble modifiedPrice =
                             tabController.productModifiedPrices[product]!;
-                        RxInt addCount = tabController.productAddCounts[product]!;
+                        RxInt addCount =
+                            tabController.productAddCounts[product]!;
 
                         return ListTile(
                           title: Container(
@@ -61,7 +62,9 @@ class HomePage extends StatelessWidget {
                                           IconButton(
                                             icon: Icon(Icons.remove),
                                             onPressed: () {
-                                              tabController.decreaseModifiedPrice(product);
+                                              tabController
+                                                  .decreaseModifiedPrice(
+                                                      product);
                                             },
                                           ),
                                           Obx(() => Text(
@@ -71,7 +74,9 @@ class HomePage extends StatelessWidget {
                                           IconButton(
                                             icon: Icon(Icons.add),
                                             onPressed: () {
-                                              tabController.increaseModifiedPrice(product);
+                                              tabController
+                                                  .increaseModifiedPrice(
+                                                      product);
                                             },
                                           ),
                                         ],
@@ -79,7 +84,6 @@ class HomePage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                
                               ],
                             ),
                           ),
