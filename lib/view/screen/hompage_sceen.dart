@@ -1,7 +1,7 @@
-import 'package:coffee_mnue_app/view/screen/addtup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:coffee_mnue_app/controller/tab_controller.dart';
+import 'package:coffee_mnue_app/view/screen/addtup.dart';
 import 'package:coffee_mnue_app/view/screen/ListPage_screen.dart';
 
 class HomePage extends StatelessWidget {
@@ -39,55 +39,64 @@ class HomePage extends StatelessWidget {
                         RxInt addCount =
                             tabController.productAddCounts[product]!;
 
-                        return ListTile(
-                          title: Container(
-                            color: Colors.amber,
-                            width: 200,
-                            height: 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(product),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 50),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "السعر الثابت: $productPrice",
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.remove),
-                                            onPressed: () {
-                                              tabController
-                                                  .decreaseModifiedPrice(
-                                                      product);
-                                            },
-                                          ),
-                                          Obx(() => Text(
-                                                "السعر المعدل: ${modifiedPrice.value} | عدد الإضافات: ${addCount.value}",
-                                                style: TextStyle(fontSize: 16),
-                                              )),
-                                          IconButton(
-                                            icon: Icon(Icons.add),
-                                            onPressed: () {
-                                              tabController
-                                                  .increaseModifiedPrice(
-                                                      product);
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                        // استخدام Obx لمراقبة التغيير في addCount وتغيير اللون بناءً عليه
+                        return Obx(() {
+                          // تحديد اللون بناءً على عدد الإضافات
+                          Color productColor = addCount.value > 1
+                              ? Colors.green // اللون عند زيادة الإضافات
+                              : Colors.amber; // اللون الافتراضي
+
+                          return ListTile(
+                            title: Container(
+                              color: productColor,
+                              width: 200,
+                              height: 100,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(product),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 50),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "السعر الثابت: $productPrice",
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.remove),
+                                              onPressed: () {
+                                                tabController
+                                                    .decreaseModifiedPrice(
+                                                        product);
+                                              },
+                                            ),
+                                            Obx(() => Text(
+                                                  "السعر المعدل: ${modifiedPrice.value} | عدد الإضافات: ${addCount.value}",
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                )),
+                                            IconButton(
+                                              icon: Icon(Icons.add),
+                                              onPressed: () {
+                                                tabController
+                                                    .increaseModifiedPrice(
+                                                        product);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        });
                       },
                     );
                   }).toList(),
